@@ -1,0 +1,278 @@
+from pyspark.sql import functions as F
+
+# listing columns needed from konh
+COL_TO_SELECT_KONH = [
+    "condition_record_no_|_knumh",
+    "client_|_mandt",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "usage_|_kvewe",
+    "table_|_kotabnr",
+    "created_on_|_erdat",
+    "source"
+    ]
+# listing columns needed from konp
+COL_TO_SELECT_KONP = [
+    "condition_record_no_|_knumh",
+    "condition_type_|_kschl",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "deletion_indicator_|_loevm_ko",
+    "sequentno_of_cond_|_kopos",
+    "application_|_kappl",
+    "base_unit_of_measure_|_meins",
+    "source"
+]
+COL_ORDER_PRICE_CONDITION = [
+    "condition_record_no_|_knumh",
+    "condition_type_|_kschl",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "deletion_indicator_|_loevm_ko",
+    "sequentno_of_cond_|_kopos",
+    "application_|_kappl",
+    "base_unit_of_measure_|_meins",
+    "client_|_mandt",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "original_dataset",
+    "created_on_|_erdat",
+    "source"
+]
+COL_TO_SELECT_T685T = [
+    "condition_type_|_kschl",
+    "name_|_vtext",
+    "application_|_kappl",
+    "source"
+]
+COL_ORDER_PRICE_CONDITION_With_DESCRIPTION = [
+    "condition_record_no_|_knumh",
+    "condition_type_|_kschl",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "deletion_indicator_|_loevm_ko",
+    "sequentno_of_cond_|_kopos",
+    "application_|_kappl",
+    "base_unit_of_measure_|_meins",
+    "client_|_mandt",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "name_|_vtext",
+    "original_dataset",
+    "created_on_|_erdat",
+    "source",
+    "pkey"
+]
+COL_TO_SELECT_A016 = [
+    "condition_record_no_|_knumh",
+    "purchasing_document_|_evrtn",
+    "item_|_evrtp",
+    "valid_to_|_datbi",
+    "valid_from_|_datab",
+    "client_|_mandt",
+    "application_|_kappl",
+    "source"
+]
+COL_ORDER_PURCHASING_CONTRACT_PRICE = [
+    "condition_record_no_|_knumh",
+    "condition_type_|_kschl",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "deletion_indicator_|_loevm_ko",
+    "sequentno_of_cond_|_kopos",
+    "application_|_kappl",
+    "base_unit_of_measure_|_meins",
+    "client_|_mandt",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "name_|_vtext",
+    "original_dataset",
+    "purchasing_document_|_evrtn",
+    "item_|_evrtp",
+    "valid_to_|_datbi",
+    "valid_from_|_datab",
+    "created_on_|_erdat",
+    "source",
+    "pkey"
+]
+# listing columns needed from A016
+COL_TO_SELECT_A017 = [
+    "condition_record_no_|_knumh",
+    "supplier_|_lifnr",
+    "plant_|_werks",
+    "material_|_matnr",
+    "valid_to_|_datbi",
+    "valid_from_|_datab",
+    "info_record_category_|_esokz",
+    "source"
+]
+#
+COL_ORDER_PURCHASING_CONSIGNMENT_PRICE = [
+    "condition_record_no_|_knumh",
+    "condition_type_|_kschl",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "deletion_indicator_|_loevm_ko",
+    "sequentno_of_cond_|_kopos",
+    "application_|_kappl",
+    "base_unit_of_measure_|_meins",
+    "client_|_mandt",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "name_|_vtext",
+    "original_dataset",
+    "material_|_matnr",
+    "plant_|_werks",
+    "supplier_|_lifnr",
+    "valid_to_|_datbi",
+    "valid_from_|_datab",
+    "created_on_|_erdat",
+    "pkey",
+    "source",
+    "info_record_category_|_esokz"
+]
+# listing columns needed from ekpo
+COL_TO_SELECT_EKPO = [
+    "purchasing_document_|_ebeln",
+    "item_|_ebelp",
+    "material_|_matnr",
+    "plant_|_werks",
+    "shipping_instr_|_evers",
+    "outline_agreement_|_konnr",
+    "item_category_|_pstyp",
+    "princagreement_item_|_ktpnr",
+    "deletion_indicator_|_loekz",
+    "short_text_|_txz01",
+    "source"
+]
+# listing columns needed from ekko
+COL_TO_SELECT_EKKO = [
+    "purchasing_doc_type_|_bsart",
+    "supplier_|_lifnr",
+    "purch_organization_|_ekorg",
+    "purchasing_document_|_ebeln",
+    "incoterms_|_inco1",
+    "purchasing_group_|_ekgrp",
+    "source"
+]
+# listing columns needed from lfa1
+COL_TO_SELECT_LFA1 = [
+    "name_|_name1",
+    "supplier_|_lifnr",
+    "account_group_|_ktokk",
+    "source"
+]
+COL_ORDER_PURCHASING_CONTRACT = [
+    "purchasing_document_|_ebeln",
+    "item_|_ebelp",
+    "material_|_matnr",
+    "short_text_|_txz01",
+    "plant_|_werks",
+    "shipping_instr_|_evers",
+    "purchasing_doc_type_|_bsart",
+    "supplier_|_lifnr",
+    "deletion_indicator_|_loekz",
+    "intercompany",
+    "incoterms_|_inco1",
+    "purch_organization_|_ekorg",
+    "outline_agreement_|_konnr",
+    "princagreement_item_|_ktpnr",
+    "name_|_name1",
+    "purchasing_group_|_ekgrp",
+    "source",
+    "info_record_category_|_esokz"
+]
+COL_ORDER_PURCHASING_PRICE =[
+    "purchasing_doc_type_|_bsart",
+    "plant_code",
+    "purch_organization_|_ekorg",
+    "purchasing_document_|_ebeln",
+    "item_|_ebelp",
+    "deletion_indicator_|_loekz",
+    "supplier_|_lifnr_trim",
+    "name_|_name1",
+    "material_number_trim",
+    "material_description_|_txz01",
+    "shipping_instr_|_evers",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "condition_type_|_kschl",
+    "name_|_vtext",
+    "valid_from_|_datab",
+    "valid_to_|_datbi",
+    "purchasing_group_|_ekgrp",
+    "incoterms_|_inco1",
+    "intercompany",
+    "created_on_|_erdat",
+    "base_unit_of_measure_|_meins",
+    "outline_agreement_|_konnr",
+    "princagreement_item_|_ktpnr",
+    "deletion_indicator_|_loevm_ko",
+    "source",
+    "client_|_mandt",
+    "application_|_kappl",
+    "condition_record_no_|_knumh",
+    "sequentno_of_cond_|_kopos",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "original_dataset",
+    "supplier_|_lifnr",
+    "material_number",
+    "pk",
+    "info_record_category_|_esokz",
+    "foreign_key_csa"
+]
+COL_ORDER_INFO_RECORDS =[
+    "purchasing_doc_type_|_bsart",
+    "plant_code",
+    "purch_organization_|_ekorg",
+    "purchasing_document_|_ebeln",
+    "item_|_ebelp",
+    "deletion_indicator_|_loekz",
+    "supplier_|_lifnr_trim",
+    "name_|_name1",
+    "material_number_trim",
+    "material_description_|_txz01",
+    "shipping_instr_|_evers",
+    "rate_|_kbetr",
+    "condition_currency_|_konwa",
+    "pricing_unit_|_kpein",
+    "unit_of_measure_|_kmein",
+    "condition_type_|_kschl",
+    "name_|_vtext",
+    "valid_from_|_datab",
+    "valid_to_|_datbi",
+    "purchasing_group_|_ekgrp",
+    "incoterms_|_inco1",
+    "intercompany",
+    "created_on_|_erdat",
+    "base_unit_of_measure_|_meins",
+    "outline_agreement_|_konnr",
+    "princagreement_item_|_ktpnr",
+    "deletion_indicator_|_loevm_ko",
+    "source",
+    "client_|_mandt",
+    "application_|_kappl",
+    "condition_record_no_|_knumh",
+    "sequentno_of_cond_|_kopos",
+    "variable_key_|_vakey",
+    "search_term_|_kosrt",
+    "original_dataset",
+    "supplier_|_lifnr",
+    "material_number",
+    "pk",
+    "info_record_category_|_esokz"
+
+]
